@@ -499,8 +499,9 @@ visEngine <- function(x, annot, feature.name = NULL,
     plot(0, 0, type='n', bty='n', xaxt='n', yaxt='n')
     legend(...)
   }
+
   cancer_legend <- add_legend("topleft",
-                              legend = .getCancersFromFam(x$affected),
+                              legend = substring(dimnames(x$affected)[[2]], 6),
                               border = NA,
                               col = colmat,
                               horiz = TRUE,
