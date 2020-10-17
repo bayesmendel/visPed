@@ -2,8 +2,8 @@ Package: visPed
 Title: Visualizes Pedigrees
 Version: 0.0.1
 Authors@R: c(
-    person("Qing", "Zhang", role = c("cre", "aut")),
-    person("Gavin", "Lee", role = "aut"))
+    person("Qing", "Zhang", role = "aut"),
+    person("Gavin", "Lee", email = "lee.gavin.k@gmail.com", role = c("cre", "aut")))
 Description: This package is a short script which can be interpreted as
     a fork of the kinship2 package where additional affection statuses
     can be shown in the context of cancer syndromes.
