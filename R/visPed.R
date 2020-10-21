@@ -38,7 +38,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = NULL) {
   }
 
   # Get the cancers to plot
-  cancers_in_pedigree <- substring(colnames(ped[, grepl("isAff", names(ped))]), 6)
+  cancers_in_pedigree <- substring(colnames(ped[, grepl("isAff", names(ped)), drop = FALSE]), 6)
   if (length(annot.cancers) == 1 && annot.cancers == "all") {
     cancers_to_plot <- cancers_in_pedigree
   } else {
@@ -46,7 +46,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = NULL) {
   }
 
   # Get the cancer columns from pedigree
-  cancer_status <- ped[, paste0("isAff", cancers_to_plot)]
+  cancer_status <- ped[, paste0("isAff", cancers_to_plot), drop = FALSE]
 
   # Set up the pedigree object in kinship2
   ks_ped <- kinship2::pedigree(id = ks_df[, "id"],
@@ -60,7 +60,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = NULL) {
   annotations <- NULL
   if (!is.null(annot.cancers)) {
 
-    cancer_ages <- ped[, paste0("Age", cancers_to_plot)]
+    cancer_ages <- ped[, paste0("Age", cancers_to_plot), drop = FALSE]
 
     age_list <- list()
     for (cancer in cancers_to_plot) {
@@ -341,7 +341,7 @@ visEngine <- function(x, annot, feature.name = NULL,
     aff_cids <- which(affected == 1)
     unknown_cids <- which(affected == -1)
 
-    #browser()
+
     if (length(aff_cids) != 0) {
       unknown_fractions <- total_fractions[-(1:length(aff_cids))]
       for (i in seq_along(aff_cids)) {
