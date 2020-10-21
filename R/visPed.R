@@ -8,8 +8,9 @@
 #' The age of diagnosis is correspondingly coded in "AgeXX" columns
 #' @param annot.cancers the cancers shortnames to display. When set to default /code{NULL}, the top four cancers will be displayed.
 #' @param annot.feature ONE feature that we would get annotation from pedigree, one of the choices from \code{c("Ancestry","Twins","CurAge","race")}
+#' @param title a string for the title on the plot
 #' @export
-visPed <- function(ped, annot.cancers = "all", annot.features = NULL) {
+visPed <- function(ped, annot.cancers = "all", annot.features = NULL, title = "Your Pedigree") {
   # Translate columns of pedigree into kinship2 standard
   # In kinship2, Sex = 1 when male, Sex = 2 when female and Sex = 3 when unknown
   # We assume that ped has -999 for missing MotherID or FatherID
@@ -105,7 +106,8 @@ visPed <- function(ped, annot.cancers = "all", annot.features = NULL) {
   visEngine(ks_ped,
             annot = annotations,
             feature.name = annot.features,
-            which.proband = probands)
+            which.proband = probands,
+            main_title = title)
 
   invisible(ks_ped)
 }

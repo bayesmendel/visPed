@@ -4,7 +4,12 @@
 \alias{visPed}
 \title{Visualize a pedigree with cancer affection statuses and other information}
 \usage{
-visPed(ped, annot.cancers = "all", annot.features = NULL)
+visPed(
+  ped,
+  annot.cancers = "all",
+  annot.features = NULL,
+  title = "Your Pedigree"
+)
 }
 \arguments{
 \item{ped}{a pedigree that contains \code{ID, Sex, MotherID, FatherID, isProband, CurAge}
@@ -13,6 +18,8 @@ Affliction is coded in "isAffXX" columns, where XX are short names of cancers
 The age of diagnosis is correspondingly coded in "AgeXX" columns}
 
 \item{annot.cancers}{the cancers shortnames to display. When set to default /code{NULL}, the top four cancers will be displayed.}
+
+\item{title}{a string for the title on the plot}
 
 \item{annot.feature}{ONE feature that we would get annotation from pedigree, one of the choices from \code{c("Ancestry","Twins","CurAge","race")}}
 }
