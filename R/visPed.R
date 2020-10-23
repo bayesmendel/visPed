@@ -10,7 +10,7 @@
 #' @param annot.feature ONE feature that we would get annotation from pedigree, one of the choices from \code{c("Ancestry","Twins","CurAge","race")}
 #' @param title a string for the title on the plot
 #' @export
-visPed <- function(ped, annot.cancers = "all", annot.features = NULL, title = "Your Pedigree") {
+visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title = "Your Pedigree") {
   # Translate columns of pedigree into kinship2 standard
   # In kinship2, Sex = 1 when male, Sex = 2 when female and Sex = 3 when unknown
   # We assume that ped has -999 for missing MotherID or FatherID
@@ -58,6 +58,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = NULL, title = "Y
                                status = ks_df[, "censor"])
 
   # Set up annotations
+
   annotations <- NULL
   if (!is.null(annot.cancers)) {
 
@@ -81,14 +82,42 @@ visPed <- function(ped, annot.cancers = "all", annot.features = NULL, title = "Y
     }
 
     annotations <- do.call(paste, c(age_list, list(sep = "\n")))
+
+    # Define a recursive function which cuts of excess \ns from the end
+    cut_n <- function(string) {
+      if (regmatches(string, regexpr(".{2}$", string)) == "\n\n") {
+        output <- substr(string, 1, nchar(string)-1)
+        return(cut_n(output))
+      } else {
+        return(string)
+      }
+    }
+
+    # Loop over the annotations to fix them
+    for (i in 1:length(annotations)) {
+      if (annotations[i] == "\n" || all(unlist(strsplit(annotations[i], split = "\n")) == "")) {
+        # If the entire string is \n or \n repeated, get rid of it
+        annotations[i] <- ""
+      } else if (unlist(strsplit(annotations[i], split = "\n"))[1] == "") {
+        # If there is a \n at the start, get rid of it
+        annotations[i] <- substring(annotations[i], 2)
+      }
+      if (annotations[i] != "" && annotations[i] != "\n") {
+        # Put a \n at the end if there is actually a notation
+        # But don't if there is already one
+        annotations[i] <- cut_n(paste0(annotations[i], "\n"))
+      }
+    }
+
   }
+
 
   if (!is.null(annot.features)) {
     annot.features <- intersect(c("Twins", "Ancestry", "CurAge", "race"),
                                 annot.features)
     features_cols <- ped[annot.features]
     feature_annotations <- lapply(seq_along(ped), function(i) {
-      mark <- substr(featuresdf[i, ], 1, 3)
+      mark <- substr(features_cols[i, ], 1, 3)
       annot.features <- toupper(substr(annot.features, 1, 1))[!is.na(mark)]
       mark <- mark[!is.na(mark)]
       paste(annot.features, mark, sep = ":")
@@ -194,7 +223,6 @@ visEngine <- function(x, annot, feature.name = NULL,
   # plist
 
   # subreg
-
 
   subregion2 <- function(plist, subreg) {
     if (subreg[3] < 1 || subreg[4] > length(plist$n))
@@ -389,12 +417,16 @@ visEngine <- function(x, annot, feature.name = NULL,
       drawbox(plist$pos[i, j], i, sex[k], affected[k, ],
               status[k], colmat, polylist, density, angle,
               boxw, boxh)
-      text_target <- paste(id[k], annot[k], sep = "\n")
+      # Omit the ID number for simplicity
+      text_target <- paste(annot[k], sep = "\n")
+      # text_target <- paste(id[k], annot[k], sep = "\n")
       tts <- strsplit(text_target, split = "\n")[[1]]
       for (tti in seq_along(tts)){
         tt <- tts[tti]
         text(plist$pos[i, j], i + 0.8*boxh + labh * 1.2 * tti, tt,
-             cex = ifelse(tti == 1, cex, cex*0.7), adj = c(0.5, 1))
+             # cex = ifelse(tti == 1, cex, cex*0.7), adj = c(0.5, 1))
+             cex = ifelse(tti == 1, cex*0.7, cex*0.7), adj = c(0.5, 1))
+
 
       }
 
