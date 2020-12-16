@@ -34,7 +34,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
 
   # Exit if there are disconnected families
   if (length(unique(fam_vec)) > 1) {
-    rland::abort("Pedigree contains disconnected families, please first double check with kinship2::makefamid",
+    rlang::abort("Pedigree contains disconnected families, please first double check with kinship2::makefamid",
                  level = "DisconnectedFamily")
   }
 
