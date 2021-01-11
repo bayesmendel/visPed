@@ -433,11 +433,12 @@ visEngine <- function(x, annot, feature.name = NULL,
       }
 
       if (k %in% which.proband){
-        legend(plist$pos[i, j] - 0.3*boxw, i + 0.8*boxh + labh ,
-               legend = "",  border = "red", cex = 0.5,
-               box.col = "red",
-               # box.lwd = 0, # remove box border
-               bg=rgb(red = 1, green = 0, blue = 0, alpha = 0.2))
+        x0 <- plist$pos[i, j] - 0.3*boxw - 0.2
+        y0 <- i + 0.8*boxh + labh
+        x1 <- x0 + 0.1
+        y1 <- y0 - 0.1
+        length <- 0.05
+        arrows(x0, y0, x1, y1, length = length)
       }
 
     }
@@ -565,15 +566,13 @@ visEngine <- function(x, annot, feature.name = NULL,
   if (!is.null(which.proband)){
     pl_x <- cancer_legend$rect$left
     pl_y <- cancer_legend$rect$top - boxh
-
     pl <- add_legend(
       x = pl_x, y = pl_y,
       legend = "Proband",
-      fill = rgb(red = 1, green = 0, blue = 0, alpha = 0.2),
       cex = 0.8,
-      bty = "n",
-      border = "red"
+      bty = "n"
     )
+    arrows(pl_x + 0.02, pl_y - 0.08, pl_x + 0.05, pl_y - 0.035, length = 0.03)
   }
 
   title(main_title)
