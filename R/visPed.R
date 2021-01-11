@@ -58,7 +58,6 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
                                status = ks_df[, "censor"])
 
   # Set up annotations
-
   annotations <- NULL
   if (!is.null(annot.cancers)) {
 
@@ -74,10 +73,12 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
       ages_to_annotate <- ifelse(affection_of_cancer,
                                  age_of_cancer,
                                  NA)
+      # If they are affected, but missing age, put "NA" as the age
+      ages_to_annotate[is.na(ages_to_annotate) & affection_of_cancer] <- "NA"
       ages_to_annotate[is.na(ages_to_annotate)] <- ""
       annotation_string <- ifelse(ages_to_annotate == "",
                                   "",
-                                  paste(cancer, ages_to_annotate, sep = ":"))
+                                  paste(cancer, ages_to_annotate, sep = ": "))
       age_list[[cancer]] <- annotation_string
     }
 
@@ -113,14 +114,16 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
 
 
   if (!is.null(annot.features)) {
-    annot.features <- intersect(c("Twins", "Ancestry", "CurAge", "race"),
+    annot.features <- intersect(c("Twins", "Ancestry", "CurAge", "race", "ID"),
                                 annot.features)
     features_cols <- ped[annot.features]
     feature_annotations <- lapply(seq_along(ped), function(i) {
       mark <- substr(features_cols[i, ], 1, 3)
-      annot.features <- toupper(substr(annot.features, 1, 1))[!is.na(mark)]
-      mark <- mark[!is.na(mark)]
-      paste(annot.features, mark, sep = ":")
+      annot.features <- toupper(substr(annot.features, 1, 1))
+      # If the mark is na, write that
+      mark[is.na(mark)] <- "NA"
+      # mark <- mark[!is.na(mark)]
+      paste(annot.features, mark, sep = ": ")
     })
 
     annotations <- paste0(annotations, sapply(feature_annotations,
@@ -155,7 +158,6 @@ visEngine <- function(x, annot, feature.name = NULL,
                       main_title = "Your Pedigree",
                       mar = c(4.1, 1, 4.1, 1), angle = c(90, 65, 40, 0), keep.par = FALSE,
                       subregion, pconnect = 0.5, ...) {
-
   getPalette = colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
 
   Call <- match.call()
