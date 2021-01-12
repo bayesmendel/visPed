@@ -108,6 +108,12 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
         # But don't if there is already one
         annotations[i] <- cut_n(paste0(annotations[i], "\n"))
       }
+      # There might still be "\n" at the start... remove them
+      # We might need to do this recursively...
+      if (!identical(strsplit(annotations[i], split = "\n")[[1]], character(0)) &
+          substr(annotations[i], 1, 1) == "\n") {
+        annotations[i] <- substring(annotations[i], 2)
+      }
     }
 
   }
@@ -117,7 +123,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
     annot.features <- intersect(c("Twins", "Ancestry", "CurAge", "race", "ID"),
                                 annot.features)
     features_cols <- ped[annot.features]
-    feature_annotations <- lapply(seq_along(ped), function(i) {
+    feature_annotations <- lapply(1:nrow(ped), function(i) {
       mark <- substr(features_cols[i, ], 1, 3)
       annot.features <- substr(annot.features, 1, 3)
       # If the mark is na, write that
@@ -158,6 +164,7 @@ visEngine <- function(x, annot, feature.name = NULL,
                       main_title = "Your Pedigree",
                       mar = c(4.1, 1, 4.1, 1), angle = c(90, 65, 40, 0), keep.par = FALSE,
                       subregion, pconnect = 0.5, ...) {
+
   getPalette = colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
 
   Call <- match.call()
