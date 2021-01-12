@@ -119,7 +119,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
     features_cols <- ped[annot.features]
     feature_annotations <- lapply(seq_along(ped), function(i) {
       mark <- substr(features_cols[i, ], 1, 3)
-      annot.features <- toupper(substr(annot.features, 1, 1))
+      annot.features <- substr(annot.features, 1, 3)
       # If the mark is na, write that
       mark[is.na(mark)] <- "NA"
       # mark <- mark[!is.na(mark)]
@@ -550,14 +550,13 @@ visEngine <- function(x, annot, feature.name = NULL,
   if (!is.null(feature.name)) {
     fl_x <- cancer_legend$rect$left + 0.05*boxh
     fl_y <- cancer_legend$rect$top - 0.7*boxh #- cancer_legend$rect$h
-
-    fl <- add_legend(x = fl_x, y = fl_y,
-                     legend = feature.name,
+    fl <- add_legend(x = fl_x-0.09, y = fl_y,
+                     legend = paste0(substr(feature.name, 1, 3), "  ", feature.name),
                      col = 1,
                      border = NULL,
                      horiz = TRUE,
                      # title = "Feature Annotation",
-                     pch = toupper(substr(feature.name, 1, 1)),
+                     # pch = substr(feature.name, 1, 3),
                      pt.cex = 0.8,
                      #fill = NA,
                      bty = "n",
