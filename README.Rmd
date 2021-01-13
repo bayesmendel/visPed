@@ -1,0 +1,29 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  cache = FALSE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.height = "30%",
+  fig.height = 8
+)
+```
+
+
+# visPed R package
+
+An R package that extends the kinship2 R package to plot pedigrees affected by multiple cancer syndromes. Designed to be compatible with the BayesMendel and associated packages.
+
+## Usage
+
+Pass a compatible pedigree (data frame) into the function.
+
+```{r, eval = FALSE}
+visPed(pedigree)
+```
