@@ -7,7 +7,7 @@
 visPed(
   ped,
   annot.cancers = "all",
-  annot.features = NULL,
+  annot.features = "CurAge",
   title = "Your Pedigree"
 )
 }
