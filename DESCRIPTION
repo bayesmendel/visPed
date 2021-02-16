@@ -1,18 +1,21 @@
 Package: visPed
 Title: Visualizes Pedigrees
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: c(
-    person("Qing", "Zhang", role = "aut"),
-    person("Gavin", "Lee", email = "lee.gavin.k@gmail.com", role = c("cre", "aut")))
+    person("Gavin", "Lee", email = "lee.gavin.k@gmail.com", role = c("cre", "aut")),
+        person("Qing", "Zhang", role = "aut"))
 Description: This package is a short script which can be interpreted as
     a fork of the kinship2 package where additional affection statuses
-    can be shown in the context of cancer syndromes.
+    can be shown in the context of cancer syndromes. It also contains a
+    feature to convert compatible data frames into visNetwork plots specifically
+    for pedigrees with disease affliction.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
   kinship2,
   rlang,
-  RColorBrewer
+  RColorBrewer,
+  visNetwork
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
