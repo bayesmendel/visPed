@@ -9,6 +9,8 @@
 #' @param annot.cancers the cancers shortnames to display. When set to default /code{NULL}, the top four cancers will be displayed.
 #' @param annot.feature ONE feature that we would get annotation from pedigree, one of the choices from \code{c("Ancestry","Twins","CurAge","race")}
 #' @param title a string for the title on the plot
+#' @importFrom grDevices colorRampPalette
+#' @importFrom graphics arrows frame legend lines par points polygon segments strheight strwidth text title
 #' @export
 visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title = "Your Pedigree") {
   # Translate columns of pedigree into kinship2 standard

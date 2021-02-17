@@ -16,6 +16,7 @@ Imports:
   kinship2,
   rlang,
   RColorBrewer,
-  visNetwork
+  visNetwork,
+  dplyr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
