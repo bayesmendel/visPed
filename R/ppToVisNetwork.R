@@ -12,7 +12,6 @@
 #' @export
 toVisNetwork <- function(ped, title = "Your Pedigree") {
   # Get the counselee(s)
-  # Colour the counselee(s) black
   counseleeIDs <- ped %>% filter(isProband == 1) %>% select(ID) %>%
     unlist() %>% as.vector()
 
@@ -26,9 +25,14 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
     pedCancers <- pedCancers %>% mutate("c.{cancer}" := if_else(get(paste0("isAff", cancer)) == 1,
                                                                 cancer,
                                                                 NA_character_)) %>%
-      mutate("ca.{cancer}" := if_else(get(paste0("isAff", cancer)) == 1,
-                                      as.character(get(paste0("Age", cancer))),
-                                      "missing"))
+      mutate("ca.{cancer}" := if_else(get(paste0("isAff", cancer)) == 1 & is.na(get(paste0("Age", cancer))),
+                                      paste0(cancer, ": age missing"),
+                                      # paste0(cancer, ": ", get(paste0("ca.", cancer)))))
+                                      NA_character_)) %>%
+      mutate("ca.{cancer}" := if_else(get(paste0("isAff", cancer)) == 1 & !is.na(get(paste0("Age", cancer))),
+                                      paste0(cancer, ": ", as.character(get(paste0("Age", cancer)))),
+                                      get(paste0("ca.", cancer))))
+
   }
 
   # Concatenate into strings
@@ -36,7 +40,6 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
                                      sep = ", ", na.rm = TRUE) %>%
     unite(ages, starts_with("ca."), remove = TRUE, sep = "<br>", na.rm = TRUE) %>%
     mutate(group = if_else(group == "", "unaffected", group)) %>%
-    mutate(ages = if_else(ages == "NA", ages, paste(group, ages, sep = ", "))) %>%
     select(ID, group, ages)
 
   # visNetwork requires an id column and from/to columns
@@ -44,13 +47,12 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
                       shape = ifelse(ped$Sex, "box", "ellipse"),
                       label = paste0(ifelse(ped$isDead, "D: ", "C: "),
                                      ped$CurAge),
-                      stringsAsFactors = FALSE
-                      ) %>%
+                      stringsAsFactors = FALSE) %>%
     left_join(pedCancers, by = c("id" = "ID")) %>%
     mutate(group = if_else(id %in% counseleeIDs, paste0(group, ", counselee"),
                            group)) %>%
     mutate(title = paste0(ifelse(ped$isDead, "Dead at: ", "Current age: "),
-                          ped$CurAge))
+                          ped$CurAge, "<br>", ages))
 
   connections <- ped %>% select(ID, MotherID, FatherID) %>%
     filter(!is.na(MotherID) & !is.na(FatherID))
@@ -60,9 +62,7 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
     data.frame(from = connections$FatherID, to = connections$ID)
   )
 
-
-
-  output <- visNetwork(nodes, edges, main = title) %>%
+  visNetwork(nodes, edges, main = title) %>%
     visEdges(arrows = "to",
              color = list(color = "gray")) %>%
     visOptions(selectedBy = list(variable = "group", multiple = TRUE),
@@ -80,8 +80,6 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
               useGroups = TRUE,
               ncol = 2) %>%
     visHierarchicalLayout(sortMethod = "directed")
-
-  output
 }
 
 # Global variables
