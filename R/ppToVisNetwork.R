@@ -30,7 +30,7 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
                                       as.character(get(paste0("Age", cancer))),
                                       "missing"))
   }
-  browser()
+
   # Concatenate into strings
   pedCancers <- pedCancers %>% unite(group, starts_with("c."), remove = TRUE,
                                      sep = ", ", na.rm = TRUE) %>%
@@ -51,8 +51,6 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
                            group)) %>%
     mutate(title = paste0(ifelse(ped$isDead, "Dead at: ", "Current age: "),
                           ped$CurAge))
-
-  browser()
 
   connections <- ped %>% select(ID, MotherID, FatherID) %>%
     filter(!is.na(MotherID) & !is.na(FatherID))
@@ -83,9 +81,7 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
               ncol = 2) %>%
     visHierarchicalLayout(sortMethod = "directed")
 
-  browser()
   output
-
 }
 
 # Global variables
