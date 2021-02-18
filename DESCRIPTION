@@ -17,6 +17,7 @@ Imports:
   rlang,
   RColorBrewer,
   visNetwork,
-  dplyr
+  dplyr,
+  tidyr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

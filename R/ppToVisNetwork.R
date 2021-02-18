@@ -6,6 +6,8 @@
 #' The age of diagnosis is correspondingly coded in "AgeXX" columns
 #' @param title a string for the title on the plot
 #' @import dplyr
+#' @import tidyr
+#' @importFrom rlang :=
 #' @import visNetwork
 #' @export
 toVisNetwork <- function(ped, title = "Your Pedigree") {
@@ -71,8 +73,7 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
                                        degree = 2,
                                        hover = TRUE),
                manipulation = list(enabled = FALSE)) %>%
-    visLegend(addNodes = list(
-                              list(label = "D: Death age", shape = "icon",
+    visLegend(addNodes = list(list(label = "D: Death age", shape = "icon",
                                    icon = list(code = "f007", color = "gray",
                                                size = 20)),
                               list(label = "C: Current age", shape = "icon",
@@ -88,4 +89,5 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
 }
 
 # Global variables
-utils::globalVariables(c("isProband", "ID", "MotherID", "FatherID"))
+utils::globalVariables(c("isProband", "ID", "MotherID", "FatherID",
+                         "group", "ages"))
