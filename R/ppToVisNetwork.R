@@ -51,7 +51,8 @@ toVisNetwork <- function(ped, title = "Your Pedigree") {
     left_join(pedCancers, by = c("id" = "ID")) %>%
     mutate(group = if_else(id %in% counseleeIDs, paste0(group, ", counselee"),
                            group)) %>%
-    mutate(title = paste0(ifelse(ped$isDead, "Dead at: ", "Current age: "),
+    mutate(title = paste0("ID: ", id, "<br>")) %>%
+    mutate(title = paste0(title, ifelse(ped$isDead, "Dead at: ", "Current age: "),
                           ped$CurAge, "<br>", ages))
 
   connections <- ped %>% select(ID, MotherID, FatherID) %>%
