@@ -3,9 +3,9 @@
 
 # visPed R package
 
-An R package that extends the kinship2 R package to plot pedigrees
-affected by multiple cancer syndromes. Designed to be compatible with
-the BayesMendel and associated packages.
+An R package pedigree plotter based on the kinship2 and visNetwork R
+packages for families affected by multiple cancer syndromes. Designed to
+be compatible with the BayesMendel and associated packages.
 
 ## Installation
 
