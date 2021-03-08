@@ -2,9 +2,10 @@ Package: visPed
 Title: Visualizes Pedigrees
 Version: 0.1.0
 Authors@R: c(
-    person("Gavin", "Lee", email = "lee.gavin.k@gmail.com", role = c("cre", "aut")),
-        person("Qing", "Zhang", role = "aut"))
-Description: This package is a short script which can be interpreted as
+    person("BayesMendel", "Lab", email = "bmendel@jimmy.harvard.edu", role = c("aut", "cre")),
+    person("Gavin", "Lee", role = c("aut")),
+    person("Qing", "Zhang", role = "aut"))
+Description: This package contains some short scripts which can be interpreted as
     a fork of the kinship2 package where additional affection statuses
     can be shown in the context of cancer syndromes. It also contains a
     feature to convert compatible data frames into visNetwork plots specifically

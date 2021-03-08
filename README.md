@@ -1,4 +1,6 @@
 
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
 # visPed R package
 
 An R package that extends the kinship2 R package to plot pedigrees
@@ -10,7 +12,7 @@ the BayesMendel and associated packages.
 Use the latest github version by running
 
 ``` r
-devtools::install_github("gavin-k-lee/visPed")
+devtools::install_github("bayesmendel/visPed")
 library(visPed)
 ```
 
@@ -21,3 +23,41 @@ Pass a compatible pedigree (data frame) into the function.
 ``` r
 visPed(pedigree)
 ```
+
+To view the pedigree as a hierarchical network, which relies on the
+visNetwork package, run
+
+``` r
+toVisNetwork(pedigree)
+```
+
+## Pedigree specifications
+
+The user must specify the `pedigree` argument as a data frame with the
+following columns:
+
+-   `ID`: A numeric value; ID for each individual. There should not be
+    any duplicated entries.
+-   `Sex`: A numeric value; `0` for female and `1` for male. Missing
+    entries are not currently supported.
+-   `MotherID`: A numeric value; unique ID for someone’s mother.
+-   `FatherID`: A numeric value; unique ID for someone’s father.
+-   `isProband`: A numeric value; `1` if someone is a proband, `0`
+    otherwise. This will be overridden by the `proband` argument in
+    `PanelPRO`, if it is specified. At least one proband should be
+    specified by either the `isProband` column or `proband`. Multiple
+    probands are supported.
+-   `CurAge`: A numeric value; the age of censoring (current age if the
+    person is alive or age of death if the person is dead). Ages ranging
+    from `1` to `94` are allowed.
+-   `isAffX`: A numeric value; the affection status of cancer `X`, where
+    `X` is a `short` cancer code (see below). Affectation status should
+    be encoded as `1` if the individual was diagnosed, `0`otherwise.
+    Missing entries are not currently supported.
+-   `AgeX`: A numeric value; the age of diagnosis for cancer `X`, where
+    `X` is a `short` cancer code (see below). Ages ranging from `1` to
+    `94` are allowed. If the individual was not diagnosed for a given
+    cancer, their affectation age should be encoded as `NA` and will be
+    ignored otherwise.
+-   `isDead`: A numeric value; `1` if someone is dead, `0` otherwise.
+    Missing entries are assumed to be `0`.

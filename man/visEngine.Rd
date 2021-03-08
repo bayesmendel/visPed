@@ -26,8 +26,7 @@ visEngine(
   angle = c(90, 65, 40, 0),
   keep.par = FALSE,
   subregion,
-  pconnect = 0.5,
-  ...
+  pconnect = 0.5
 )
 }
 \arguments{
@@ -36,6 +35,44 @@ visEngine(
 \item{annot}{the annotation string}
 
 \item{feature.name}{the names of the features}
+
+\item{which.proband}{which ID is the proband}
+
+\item{add.ids}{which additional IDs to add}
+
+\item{id}{ID column from x pedigree}
+
+\item{status}{alive or dead status}
+
+\item{affected}{affected or unaffected column}
+
+\item{cex}{spacing}
+
+\item{col}{column number, either 1 or the number of individuals}
+
+\item{symbolsize}{symbol size}
+
+\item{branch}{branch size}
+
+\item{packed}{boolean to pack the pedigree plot}
+
+\item{align}{align parameters}
+
+\item{width}{width parameter}
+
+\item{density}{density parameters}
+
+\item{main_title}{title on plot}
+
+\item{mar}{legend margins}
+
+\item{angle}{angle of labels}
+
+\item{keep.par}{boolean to keep or discard old graphics parameters}
+
+\item{subregion}{boolean whether or not to split plot into subregions}
+
+\item{pconnect}{controls parent connections}
 }
 \description{
 Visualization engine inspired by kinship2

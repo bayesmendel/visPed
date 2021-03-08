@@ -2,17 +2,22 @@
 #'
 #' This function relies on the kinship2 package
 #'
-#' @param ped a pedigree that contains \code{ID, Sex, MotherID, FatherID, isProband, CurAge}
-#' It is assumed that in this data.frame, Sex = 1 if male, Sex = 0 if female and Sex = NA if unkonwn
+#' @param ped a pedigree that contains \code{ID, Sex, MotherID, FatherID,
+#' isProband, CurAge}
+#' It is assumed that in this data.frame, Sex = 1 if male, Sex = 0 if female
+#' and Sex = NA if unkonwn
 #' Affliction is coded in "isAffXX" columns, where XX are short names of cancers
 #' The age of diagnosis is correspondingly coded in "AgeXX" columns
-#' @param annot.cancers the cancers shortnames to display. When set to default /code{NULL}, the top four cancers will be displayed.
-#' @param annot.feature ONE feature that we would get annotation from pedigree, one of the choices from \code{c("Ancestry","Twins","CurAge","race")}
+#' @param annot.cancers the cancers shortnames to display. When set to
+#' default /code{NULL}, the top four cancers will be displayed.
+#' @param annot.feature ONE feature that we would get annotation from pedigree,
+#'  one of the choices from \code{c("Ancestry","Twins","CurAge","race")}
 #' @param title a string for the title on the plot
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics arrows frame legend lines par points polygon segments strheight strwidth text title
 #' @export
-visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title = "Your Pedigree") {
+visPed <- function(ped, annot.cancers = "all", annot.feature = "CurAge",
+                   title = "Your Pedigree") {
   # Translate columns of pedigree into kinship2 standard
   # In kinship2, Sex = 1 when male, Sex = 2 when female and Sex = 3 when unknown
   # We assume that ped has -999 for missing MotherID or FatherID
@@ -38,13 +43,15 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
 
   # Exit if there are disconnected families
   if (length(unique(fam_vec)) > 1) {
-    rlang::abort("Pedigree contains disconnected families, please first double check with kinship2::makefamid",
+    rlang::abort(paste0("Pedigree contains disconnected families, ",
+                 "please first double check with kinship2::makefamid"),
       level = "DisconnectedFamily"
     )
   }
 
   # Get the cancers to plot
-  cancers_in_pedigree <- substring(colnames(ped[, grepl("isAff", names(ped)), drop = FALSE]), 6)
+  cancers_in_pedigree <- substring(colnames(ped[, grepl("isAff", names(ped)),
+                                                drop = FALSE]), 6)
   if (length(annot.cancers) == 1 && annot.cancers == "all") {
     cancers_to_plot <- cancers_in_pedigree
   } else {
@@ -104,7 +111,8 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
 
     # Loop over the annotations to fix them
     for (i in 1:length(annotations)) {
-      if (annotations[i] == "\n" || all(unlist(strsplit(annotations[i], split = "\n")) == "")) {
+      if (annotations[i] == "\n" ||
+          all(unlist(strsplit(annotations[i], split = "\n")) == "")) {
         # If the entire string is \n or \n repeated, get rid of it
         annotations[i] <- ""
       } else if (unlist(strsplit(annotations[i], split = "\n"))[1] == "") {
@@ -138,19 +146,19 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
     }
   }
 
-  if (!is.null(annot.features)) {
-    annot.features <- intersect(
+  if (!is.null(annot.feature)) {
+    annot.feature <- intersect(
       c("Twins", "Ancestry", "CurAge", "race", "ID"),
-      annot.features
+      annot.feature
     )
-    features_cols <- ped[annot.features]
+    features_cols <- ped[annot.feature]
     feature_annotations <- lapply(1:nrow(ped), function(i) {
       mark <- substr(features_cols[i, ], 1, 3)
-      annot.features <- substr(annot.features, 1, 3)
+      annot.feature <- substr(annot.feature, 1, 3)
       # If the mark is na, write that
       mark[is.na(mark)] <- "NA"
       # mark <- mark[!is.na(mark)]
-      paste(annot.features, mark, sep = ": ")
+      paste(annot.feature, mark, sep = ": ")
     })
 
     annotations <- paste0(annotations, sapply(feature_annotations,
@@ -165,7 +173,7 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
   # Plot using kinship2 engine
   visEngine(ks_ped,
     annot = annotations,
-    feature.name = annot.features,
+    feature.name = annot.feature,
     which.proband = probands,
     main_title = title
   )
@@ -178,6 +186,25 @@ visPed <- function(ped, annot.cancers = "all", annot.features = "CurAge", title 
 #' @param x a pedigree data.frame
 #' @param annot the annotation string
 #' @param feature.name the names of the features
+#' @param which.proband which ID is the proband
+#' @param add.ids which additional IDs to add
+#' @param id ID column from x pedigree
+#' @param status alive or dead status
+#' @param affected affected or unaffected column
+#' @param cex spacing
+#' @param col column number, either 1 or the number of individuals
+#' @param symbolsize symbol size
+#' @param branch branch size
+#' @param packed boolean to pack the pedigree plot
+#' @param align align parameters
+#' @param width width parameter
+#' @param density density parameters
+#' @param main_title title on plot
+#' @param mar legend margins
+#' @param angle angle of labels
+#' @param keep.par boolean to keep or discard old graphics parameters
+#' @param subregion boolean whether or not to split plot into subregions
+#' @param pconnect controls parent connections
 #' @import kinship2
 visEngine <- function(x, annot, feature.name = NULL,
                       which.proband = NULL, add.ids = x$id[x$add == 1],
@@ -186,7 +213,7 @@ visEngine <- function(x, annot, feature.name = NULL,
                       align = c(1.5, 2), width = 10, density = c(-1, 35, 65, 20),
                       main_title = "Your Pedigree",
                       mar = c(4.1, 1, 4.1, 1), angle = c(90, 65, 40, 0), keep.par = FALSE,
-                      subregion, pconnect = 0.5, ...) {
+                      subregion, pconnect = 0.5) {
   getPalette <- colorRampPalette(RColorBrewer::brewer.pal(9, "Set1"))
 
   Call <- match.call()
