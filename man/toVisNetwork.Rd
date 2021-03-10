@@ -17,3 +17,6 @@ The age of diagnosis is correspondingly coded in "AgeXX" columns}
 \description{
 Converts a PanelPRO compatible data frame into a visNetwork data frame
 }
+\examples{
+toVisNetwork(test_fam_1)
+}
