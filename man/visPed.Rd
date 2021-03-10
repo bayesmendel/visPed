@@ -30,3 +30,6 @@ one of the choices from \code{c("Ancestry","Twins","CurAge","race")}}
 \description{
 This function relies on the kinship2 package
 }
+\examples{
+visPed(test_fam_1)
+}

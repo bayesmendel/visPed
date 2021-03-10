@@ -15,6 +15,8 @@
 #' @param title a string for the title on the plot
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics arrows frame legend lines par points polygon segments strheight strwidth text title
+#' @examples
+#' visPed(test_fam_1)
 #' @export
 visPed <- function(ped, annot.cancers = "all", annot.feature = "CurAge",
                    title = "Your Pedigree") {
