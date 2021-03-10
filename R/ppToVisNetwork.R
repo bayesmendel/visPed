@@ -10,6 +10,8 @@
 #' @importFrom rlang :=
 #' @import visNetwork
 #' @export
+#' @examples
+#' toVisNetwork(test_fam_1)
 toVisNetwork <- function(ped, title = "Your Pedigree") {
   # Get the counselee(s)
   counseleeIDs <- ped %>% filter(isProband == 1) %>% select(ID) %>%
