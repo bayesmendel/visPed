@@ -51,17 +51,24 @@ visPed <- function(ped, annot.cancers = "all", annot.feature = "CurAge",
     )
   }
 
+  # Currently supported cancers: BC OC BRA COL ENDO GAS KID MELA PANC PROS SI (SMA renamed)
+  supported_cancers <- c("BC", "OC", "BRA", "COL", "ENDO", "GAS", "KID",
+                         "MELA", "PANC", "PROS", "SMA")
+
   # Get the cancers to plot
   cancers_in_pedigree <- substring(colnames(ped[, grepl("isAff", names(ped)),
                                                 drop = FALSE]), 6)
-  if (length(annot.cancers) == 1 && annot.cancers == "all") {
+
+  if (annot.cancers == "all") {
+    cancer_status <- ped[, paste0("isAff", cancers_in_pedigree), drop = FALSE]
+    non_appearing_cancers <- paste0("isAff", setdiff(supported_cancers,
+                                                     cancers_in_pedigree))
+    cancer_status[non_appearing_cancers] <- 0
     cancers_to_plot <- cancers_in_pedigree
-  } else {
-    cancers_to_plot <- intersect(cancers_in_pedigree, annot.cancers)
   }
 
-  # Get the cancer columns from pedigree
-  cancer_status <- ped[, paste0("isAff", cancers_to_plot), drop = FALSE]
+  # Reorder cancer columns so that they are always consistent across plots
+  cancer_status <- cancer_status[, order(colnames(cancer_status))]
 
   # Set up the pedigree object in kinship2
   ks_ped <- kinship2::pedigree(
@@ -72,6 +79,7 @@ visPed <- function(ped, annot.cancers = "all", annot.feature = "CurAge",
     affected = as.matrix(cancer_status),
     status = ks_df[, "censor"]
   )
+
 
   # Set up annotations
   annotations <- NULL
@@ -153,16 +161,22 @@ visPed <- function(ped, annot.cancers = "all", annot.feature = "CurAge",
       c("Twins", "Ancestry", "CurAge", "race", "ID"),
       annot.feature
     )
-    features_cols <- ped[annot.feature]
+    features_cols <- ped[c(annot.feature, "isDead")]
     feature_annotations <- lapply(1:nrow(ped), function(i) {
-      mark <- substr(features_cols[i, ], 1, 3)
+      mark <- substr(features_cols[i, 1], 1, 3)
+      if (annot.feature == "CurAge") {
+        annot.feature <- "Age"
+      }
       annot.feature <- substr(annot.feature, 1, 3)
       # If the mark is na, write that
       mark[is.na(mark)] <- "NA"
       # mark <- mark[!is.na(mark)]
+      # Do not plot Age if isDead==1
+      # if (!(annot.feature == "Age" && features_cols[i, "isDead"] == 1)) {
+      #   paste(annot.feature, mark, sep = ": ")
+      # }
       paste(annot.feature, mark, sep = ": ")
     })
-
     annotations <- paste0(annotations, sapply(feature_annotations,
       paste0,
       collapse = "\n"
@@ -663,25 +677,27 @@ visEngine <- function(x, annot, feature.name = NULL,
   if (!is.null(feature.name)) {
     fl_x <- cancer_legend$rect$left + 0.05 * boxh
     fl_y <- cancer_legend$rect$top - 0.7 * boxh #- cancer_legend$rect$h
-    fl <- add_legend(
-      x = fl_x - 0.09, y = fl_y,
-      legend = paste0(substr(feature.name, 1, 3), "  ", feature.name),
-      col = 1,
-      border = NULL,
-      horiz = TRUE,
-      # title = "Feature Annotation",
-      # pch = substr(feature.name, 1, 3),
-      pt.cex = 0.8,
-      # fill = NA,
-      bty = "n",
-      cex = 0.8
-    )
+    if (feature.name != "CurAge") {
+      fl <- add_legend(
+        x = fl_x - 0.09, y = fl_y,
+        legend = paste0(substr(feature.name, 1, 3), "  ", feature.name),
+        col = 1,
+        border = NULL,
+        horiz = TRUE,
+        # title = "Feature Annotation",
+        # pch = substr(feature.name, 1, 3),
+        pt.cex = 0.8,
+        # fill = NA,
+        bty = "n",
+        cex = 0.8
+      )
+    }
   }
   if (!is.null(which.proband)) {
     pl_x <- cancer_legend$rect$left
     pl_y <- cancer_legend$rect$top - boxh
     pl <- add_legend(
-      x = pl_x, y = pl_y,
+      x = pl_x*0.97, y = pl_y,
       legend = "Proband",
       cex = 0.8,
       bty = "n"
