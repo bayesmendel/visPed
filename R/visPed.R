@@ -52,8 +52,10 @@ visPed <- function(ped, annot.cancers = "all", annot.feature = "CurAge",
   }
 
   # Currently supported cancers: BC OC BRA COL ENDO GAS KID MELA PANC PROS SI (SMA renamed)
-  supported_cancers <- c("BC", "OC", "BRA", "COL", "ENDO", "GAS", "KID",
-                         "MELA", "PANC", "PROS", "SMA")
+  supported_cancers <- c("BRA", "BC", "CER", "COL", "ENDO",
+                         "GAS", "KID", "LEUK", "MELA", "OC",
+                         "OST", "PANC", "PROS", "SI",
+                         "STS", "THY", "UB", "HEP")
 
   # Get the cancers to plot
   cancers_in_pedigree <- substring(colnames(ped[, grepl("isAff", names(ped)),
