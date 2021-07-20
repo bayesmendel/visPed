@@ -65,7 +65,12 @@ visPed <- function(ped, annot.cancers = "all", annot.feature = "CurAge",
     cancer_status <- ped[, paste0("isAff", cancers_in_pedigree), drop = FALSE]
     non_appearing_cancers <- paste0("isAff", setdiff(supported_cancers,
                                                      cancers_in_pedigree))
-    cancer_status[non_appearing_cancers] <- 0
+    if (non_appearing_cancers == "isAff") {
+      # if all cancers present, don't need to do anything
+    } else {
+      # when there are some missing cancers, set them all to 0
+      cancer_status[non_appearing_cancers] <- 0
+    }
     cancers_to_plot <- cancers_in_pedigree
   }
 
