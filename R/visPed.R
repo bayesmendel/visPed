@@ -383,7 +383,7 @@ visEngine <- function(x, annot, feature.name = NULL,
   frame()
 
   # allow additional space for cancer legend
-  oldpar <- par(xpd = T, mar = mar + c(0, 0, 4, 0))
+  oldpar <- par(xpd = T, mar = mar + c(-3.5, 0, 4, 0))
   # oldpar <- par(mar = mar, xpd = TRUE)
   psize <- par("pin")
   stemp1 <- strwidth("ABC", units = "inches", cex = cex) * 2.5 / 3
@@ -717,6 +717,7 @@ visEngine <- function(x, annot, feature.name = NULL,
   if (length(ckall > 0)) {
     cat("Did not plot the following people:", ckall, "\n")
   }
+
   if (!keep.par) {
     par(oldpar)
   }
