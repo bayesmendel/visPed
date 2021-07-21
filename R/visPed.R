@@ -674,11 +674,12 @@ visEngine <- function(x, annot, feature.name = NULL,
     legend = substring(dimnames(x$affected)[[2]], 6),
     border = NA,
     col = colmat,
-    horiz = TRUE,
+    # horiz = TRUE,
     cex = 0.8,
     bty = "n",
     # pch = c(rep(".", length(colmat)), "[C]"),
-    fill = colmat
+    fill = colmat,
+    ncol = 9
   )
 
   if (!is.null(feature.name)) {
